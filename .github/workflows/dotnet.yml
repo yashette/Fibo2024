@@ -20,7 +20,7 @@ jobs:
     - name: Run Unit test
       working-directory: ./tests/Leonardo.Tests
       run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage/opencover.xml
-    - run: dotnet publish ./src/Leonardo.Web/Leonardo.Web.csproj --self-contained true --output ./win-x64/fibonacci -c Release -r win-x64 /p:PublishSingleFile=true /p:PublishTrimmed=true /p:PublishReadyToRun=true
+    - run: dotnet publish ./src/Leonardo.Web/Leonardo.Web.csproj --self-contained true --output ./win-x64/fibonacci -c Release -r win-x64 /p:PublishSingleFile=true 
     - name: Upload WebApp Build Artifact
       uses: actions/upload-artifact@v3
       with:          
