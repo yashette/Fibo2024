@@ -80,7 +80,7 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }} 
   
   deploy_azure:
-    needs: [ build_docker_webapp ]
+    needs: [ build_docker_webapp, tags ]
     runs-on: ubuntu-latest
     steps:
       - name: azure login
