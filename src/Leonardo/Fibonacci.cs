@@ -4,9 +4,16 @@ namespace Leonardo;
 
 public record FibonacciResult(int input, int result);
 
-public static class Fibonacci
+public class Fibonacci
 {
-    public static int Run(int i)
+    private readonly FibonacciDataContext _context;
+
+    public Fibonacci(FibonacciDataContext context)
+    {
+        _context = context;
+    }
+    
+    public int Run(int i)
     {
         if (i <= 2) 
             return 1;
@@ -14,15 +21,14 @@ public static class Fibonacci
         return Run(i - 2) + Run(i - 1);
     }
     
-    public static async Task<List<FibonacciResult>> RunAsync(string[] strings)
+    public async Task<List<FibonacciResult>> RunAsync(string[] strings)
     {
-        await using var context = new FibonacciDataContext();
-        
+       
         var tasks = new List<Task<FibonacciResult>>();
         foreach (var input in strings)
         {
             var int32 = Convert.ToInt32(input);
-            var t_fibo  =  await context.TFibonaccis.Where(t => t.FibInput == int32).FirstOrDefaultAsync();
+            var t_fibo  =  await _context.TFibonaccis.Where(t => t.FibInput == int32).FirstOrDefaultAsync();
             if(t_fibo != null)
             {
                 var t = Task.Run(() =>
@@ -38,7 +44,7 @@ public static class Fibonacci
             {
                 var f = Task.Run(() =>
                 {
-                    var result = Fibonacci.Run(int32);
+                    var result = Run(int32);
                     return new FibonacciResult(int32, result);
                 });
 
@@ -60,16 +66,16 @@ public static class Fibonacci
         {
             var r = await task;
            
-           var exists = await context.TFibonaccis.AnyAsync(t => t.FibInput == r.input);
+           var exists = await _context.TFibonaccis.AnyAsync(t => t.FibInput == r.input);
            if (!exists)
            {
-               context.TFibonaccis.Add(new TFibonacci { FibInput = r.input, FibOutput = r.result });
+               _context.TFibonaccis.Add(new TFibonacci { FibInput = r.input, FibOutput = r.result });
            }
            
             results.Add(r);
         }
         
-        await context.SaveChangesAsync( );
+        await _context.SaveChangesAsync( );
     
         return results;
     }

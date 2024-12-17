@@ -13,7 +13,7 @@ services:
   sqlcmd:
     image: mcr.microsoft.com/mssql-tools:latest
     command: |
-      sh -c "sleep 40 && sh -c "/opt/mssql-tools/bin/sqlcmd -S mssql -U SA -P Password! -d master -i /var/opt/mssql/scripts/initBase.sql "
+      sh -c "sleep 40 && /opt/mssql-tools/bin/sqlcmd -S mssql -U SA -P Password! -d master -i /var/opt/mssql/scripts/initBase.sql "
     stdin_open: true
     volumes:
       - ./sqlserver:/var/opt/mssql/scripts
